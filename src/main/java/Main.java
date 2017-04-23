@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import static javax.measure.unit.SI.KILOGRAM;
@@ -28,20 +29,19 @@ public class Main {
             new HikariDataSource(config) : new HikariDataSource();
 
     get("/mms", (req, res) -> {
+      LinkedList<String> list = new LinkedList<>();
 
       try(Connection connection = dataSource.getConnection()) {
         ResultSet rs = connection.createStatement().executeQuery("SELECT tick FROM ticks");
         while (rs.next()) {
-          if (!rs.next()) {
-            return rs.getTimestamp("tick");
-          }
+          list.add(rs.getTimestamp("tick").toString());
         }
       } catch (Exception e) {
         return e;
       }
 //      new MmsSender().send("", "");
 //      return "mms sent";
-      return "don't work";
+      return list.getLast();
     });
 
     get("/hello", (req, res) -> {
