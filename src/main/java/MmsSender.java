@@ -20,7 +20,8 @@ public class MmsSender {
         params.add(new BasicNameValuePair("To", "+380935299155"));
         params.add(new BasicNameValuePair("From", "+14158004619"));
         params.add(new BasicNameValuePair("Body", ""));
-        params.add(new BasicNameValuePair("MediaUrl", "https://c1.staticflickr.com/3/2899/14341091933_1e92e62d12_b.jpg"));
+//        params.add(new BasicNameValuePair("MediaUrl", "https://c1.staticflickr.com/3/2899/14341091933_1e92e62d12_b.jpg"));
+        params.add(new BasicNameValuePair("MediaUrl", imageUrl));
 
         MessageFactory messageFactory = client.getAccount().getMessageFactory();
         Message message = messageFactory.create(params);

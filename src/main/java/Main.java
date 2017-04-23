@@ -39,8 +39,7 @@ public class Main {
       } catch (Exception e) {
         return e;
       }
-//      new MmsSender().send("", "");
-//      return "mms sent";
+      new MmsSender().send("", "");
       return list.getLast();
     });
 
