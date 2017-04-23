@@ -22,15 +22,23 @@ public class Main {
 
     port(Integer.valueOf(System.getenv("PORT")));
     staticFileLocation("/public");
+    HikariConfig config = new  HikariConfig();
+    config.setJdbcUrl(System.getenv("JDBC_DATABASE_URL"));
+    final HikariDataSource dataSource = (config.getJdbcUrl() != null) ?
+            new HikariDataSource(config) : new HikariDataSource();
 
     get("/mms", (req, res) -> {
-      new MmsSender().send("", "");
-//      RelativisticModel.select();
 
-//      String energy = System.getenv().get("ENERGY");
-
-//      Amount<Mass> m = Amount.valueOf(energy).to(KILOGRAM);
-      return "";
+      try(Connection connection = dataSource.getConnection()) {
+        ResultSet rs = connection.createStatement().executeQuery("SELECT tick FROM ticks");
+        rs.last();
+        rs.getTimestamp("tick");
+        return rs.getTimestamp("tick");
+      } catch (Exception e) {
+        return e;
+      }
+//      new MmsSender().send("", "");
+//      return "mms sent";
     });
 
     get("/hello", (req, res) -> {
@@ -43,16 +51,12 @@ public class Main {
     });
 
     get("/", (request, response) -> {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("message", "Hello World!");
+      Map<String, Object> attributes = new HashMap<>();
+      attributes.put("message", "Hello World!");
 
-        return new ModelAndView(attributes, "index.ftl");
+      return new ModelAndView(attributes, "index.ftl");
     }, new FreeMarkerEngine());
 
-    HikariConfig config = new  HikariConfig();
-    config.setJdbcUrl(System.getenv("JDBC_DATABASE_URL"));
-    final HikariDataSource dataSource = (config.getJdbcUrl() != null) ?
-      new HikariDataSource(config) : new HikariDataSource();
 
     get("/db", (req, res) -> {
       Map<String, Object> attributes = new HashMap<>();
