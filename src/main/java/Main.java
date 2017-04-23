@@ -40,7 +40,7 @@ public class Main {
         return e;
       }
       new MmsSender().send("", "");
-      return list.getLast();
+      return "sent" + list.getLast();
     });
 
     get("/hello", (req, res) -> {
