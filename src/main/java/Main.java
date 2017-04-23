@@ -31,14 +31,17 @@ public class Main {
 
       try(Connection connection = dataSource.getConnection()) {
         ResultSet rs = connection.createStatement().executeQuery("SELECT tick FROM ticks");
-        rs.last();
-        rs.getTimestamp("tick");
-        return rs.getTimestamp("tick");
+        while (rs.next()) {
+          if (!rs.next()) {
+            return rs.getTimestamp("tick");
+          }
+        }
       } catch (Exception e) {
         return e;
       }
 //      new MmsSender().send("", "");
 //      return "mms sent";
+      return "don't work";
     });
 
     get("/hello", (req, res) -> {
