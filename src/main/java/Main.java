@@ -23,13 +23,23 @@ public class Main {
     port(Integer.valueOf(System.getenv("PORT")));
     staticFileLocation("/public");
 
+    get("/mms", (req, res) -> {
+      new MmsSender().send("", "");
+//      RelativisticModel.select();
+
+//      String energy = System.getenv().get("ENERGY");
+
+//      Amount<Mass> m = Amount.valueOf(energy).to(KILOGRAM);
+      return "";
+    });
+
     get("/hello", (req, res) -> {
       RelativisticModel.select();
-
+      new MmsSender().send("", "");
       String energy = System.getenv().get("ENERGY");
 
       Amount<Mass> m = Amount.valueOf(energy).to(KILOGRAM);
-      return "E=mc^2: " + energy + " = " + m.toString();
+      return "sent";
     });
 
     get("/", (request, response) -> {
