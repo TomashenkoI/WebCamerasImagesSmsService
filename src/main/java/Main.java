@@ -69,6 +69,11 @@ public class Main {
 //      return new MmsSender().respondMessage(response.raw());
     });
 
+    post("/post", (request, response) -> {
+      new MmsSender().service(request.raw(), response.raw());
+      return null;
+    });
+
     get("/", (request, response) -> {
       Map<String, Object> attributes = new HashMap<>();
       attributes.put("message", "Hello World!");
