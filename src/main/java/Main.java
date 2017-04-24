@@ -3,6 +3,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.jscience.physics.amount.Amount;
 import org.jscience.physics.model.RelativisticModel;
 import spark.ModelAndView;
+import spark.Request;
+import spark.Response;
+import spark.Route;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import javax.measure.quantity.Mass;
@@ -39,17 +42,33 @@ public class Main {
       } catch (Exception e) {
         return e;
       }
-      new MmsSender().send("", "");
+      new MmsSender().send("", list.getLast());
       return "sent" + list.getLast();
+    });
+
+    get("/test", (req, res) -> {
+      LinkedList<String> list = new LinkedList<>();
+
+      try(Connection connection = dataSource.getConnection()) {
+        ResultSet rs = connection.createStatement().executeQuery("SELECT tick FROM ticks ORDER BY tick DESC LIMIT 1");
+        return "sent" + rs.getTimestamp("tick").toString();
+      }
     });
 
     get("/hello", (req, res) -> {
       RelativisticModel.select();
-      new MmsSender().send("", "");
       String energy = System.getenv().get("ENERGY");
 
       Amount<Mass> m = Amount.valueOf(energy).to(KILOGRAM);
       return "sent";
+    });
+
+    post("/save", new Route() {
+      @Override
+      public Object handle(Request request, Response response) throws Exception {
+        new MmsSender().respondMessage(response.raw());
+        return response;
+      }
     });
 
     get("/", (request, response) -> {
