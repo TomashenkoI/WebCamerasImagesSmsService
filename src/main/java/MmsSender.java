@@ -29,7 +29,7 @@ public class MmsSender {
 //        Message message = messageFactory.create(params);
 //    }
 
-    public void respondMessage(HttpServletResponse response) {
+    public HttpServletResponse respondMessage(HttpServletResponse response) {
         TwiMLResponse twiml = new TwiMLResponse();
         Message message = new Message();
         try {
@@ -46,6 +46,7 @@ public class MmsSender {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return response;
     }
 
 }

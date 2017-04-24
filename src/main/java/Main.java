@@ -3,9 +3,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.jscience.physics.amount.Amount;
 import org.jscience.physics.model.RelativisticModel;
 import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
-import spark.Route;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import javax.measure.quantity.Mass;
@@ -51,8 +48,11 @@ public class Main {
 
       try(Connection connection = dataSource.getConnection()) {
         ResultSet rs = connection.createStatement().executeQuery("SELECT tick FROM ticks ORDER BY tick DESC LIMIT 1");
-        return "sent" + rs.getTimestamp("tick").toString();
+        while (rs.next()) {
+          return "sent" + rs.getTimestamp("tick").toString();
+        }
       }
+      return "not sent";
     });
 
     get("/hello", (req, res) -> {
@@ -63,13 +63,7 @@ public class Main {
       return "sent";
     });
 
-    post("/save", new Route() {
-      @Override
-      public Object handle(Request request, Response response) throws Exception {
-        new MmsSender().respondMessage(response.raw());
-        return response;
-      }
-    });
+    post("/save", (request, response) -> new MmsSender().respondMessage(response.raw()));
 
     get("/", (request, response) -> {
       Map<String, Object> attributes = new HashMap<>();
