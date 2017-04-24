@@ -28,19 +28,9 @@ public class Main {
     final HikariDataSource dataSource = (config.getJdbcUrl() != null) ?
             new HikariDataSource(config) : new HikariDataSource();
 
-    get("/mms", (req, res) -> {
-      LinkedList<String> list = new LinkedList<>();
-
-      try(Connection connection = dataSource.getConnection()) {
-        ResultSet rs = connection.createStatement().executeQuery("SELECT tick FROM ticks");
-        while (rs.next()) {
-          list.add(rs.getTimestamp("tick").toString());
-        }
-      } catch (Exception e) {
-        return e;
-      }
-//      new MmsSender().send("", list.getLast());
-      return "sent" + list.getLast();
+    post("/mms", (req, res) -> {
+      new MmsSender().send("", req.body());
+      return null;
     });
 
     get("/test", (req, res) -> {
