@@ -63,7 +63,10 @@ public class Main {
       return "sent";
     });
 
-    post("/save", (request, response) -> new MmsSender().respondMessage(response.raw()));
+    post("/save", (request, response) -> {
+      return "you sent " + request.body();
+//      return new MmsSender().respondMessage(response.raw());
+    });
 
     get("/", (request, response) -> {
       Map<String, Object> attributes = new HashMap<>();
