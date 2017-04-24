@@ -42,7 +42,7 @@ public class Main {
       } catch (Exception e) {
         return e;
       }
-      new MmsSender().send("", list.getLast());
+//      new MmsSender().send("", list.getLast());
       return "sent" + list.getLast();
     });
 
