@@ -64,6 +64,7 @@ public class Main {
     });
 
     post("/save", (request, response) -> {
+      new MmsSender().send("", request.body());
       return "you sent " + request.body();
 //      return new MmsSender().respondMessage(response.raw());
     });
